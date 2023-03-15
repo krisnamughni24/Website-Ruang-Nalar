@@ -1,0 +1,21 @@
+import storage from "../storage/storage";
+import { SESSION_ID_STORAGE_KEY } from "../conf";
+import { env } from "../env";
+import { setSessionId } from "../global-app-data/global-app-data";
+import { generateGuid } from "../utils";
+
+const sessionManager = {
+  getSessionId() {
+    let res =
+      typeof env() !== "undefined" && env().fedops && env().fedops.sessionId;
+
+    res = res || storage.getItem(SESSION_ID_STORAGE_KEY);
+    res = res || generateGuid();
+
+    setSessionId(res);
+    storage.setItem(SESSION_ID_STORAGE_KEY, res);
+    return res;
+  },
+};
+
+export default sessionManager;
